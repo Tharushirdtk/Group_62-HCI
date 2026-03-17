@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoomCraft</title>
+    <link rel="icon" type="image/png" href="images/logo.jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background:
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url("images/background.jpg");
+
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <header>
+        <div class="logo">RoomCraft</div>
+        <div class="user-controls">
+            <span id="current-user" class="hidden"></span>
+            <button id="btn-logout" class="btn btn-secondary hidden">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="view-container">
+
+        <!-- LOGIN VIEW -->
+        <section id="login-view" class="h-full">
+            <div class="glass-panel login-box">
+                <h1 class="mb-4">Designer Login</h1>
+                <p>Welcome! Sign in to start designing your room.</p>
+                <form id="login-form">
+                    <div class="form-group text-left" style="text-align: left;">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required placeholder="Enter your username">
+                    </div>
+                    <div class="form-group text-left" style="text-align: left; margin-top: 1rem;">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-2">Sign In</button>
+                    <p class="mt-4" style="font-size: 0.9rem;">
+                        Don't have an account? <a href="#" id="link-to-register"
+                            style="color: var(--primary-color);">Register here</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <!-- REGISTRATION VIEW -->
+        <section id="register-view" class="h-full hidden">
+            <div class="glass-panel login-box">
+                <h1 class="mb-4">Create Account</h1>
+                <p>Sign up to start designing your room in 3D.</p>
+                <form id="register-form">
+                    <div class="form-group text-left" style="text-align: left;">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" required placeholder="Enter your username">
+                    </div>
+                    <div class="form-group text-left" style="text-align: left; margin-top: 1rem;">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full mt-2">Sign Up</button>
+                    <p class="mt-4" style="font-size: 0.9rem;">
+                        Already have an account? <a href="#" id="link-to-login"
+                            style="color: var(--primary-color);">Login here</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <!-- DASHBOARD VIEW -->
+        <section id="dashboard-view" class="h-full hidden">
+            <div class="dashboard-header">
+                <h2>Your Designs</h2>
+                <div class="flex gap-2">
+                    <button id="btn-feedback" class="btn"
+                        style="background-color: #1e3a8a; color: white; border: none;">Feedback</button>
+                    <button id="btn-create-living" class="btn btn-primary">+ Living Room</button>
+                    <button id="btn-create-bed" class="btn btn-primary">+ Bed Room</button>
+                    <button id="btn-create-empty" class="btn btn-primary">+ New Room</button>
+                </div>
+            </div>
+
+            <div id="design-grid" class="design-grid">
+                <!-- Design cards will be injected here via JS -->
+            </div>
+        </section>
+
+        <!-- EDITOR VIEW -->
+        <section id="editor-view" class="hidden">
+            <!-- Sidebar Controls -->
+            <aside class="sidebar flex-col">
+                <div class="sidebar-section">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3>Room Designer</h3>
+                        <button id="btn-back-dashboard" class="btn btn-secondary"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Back</button>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label for="design-name">Design Name</label>
+                        <input type="text" id="design-name" value="Untitled Design">
+                    </div>
+                </div>
+
+                <div class="scrollable">
+                    <div class="sidebar-section">
+                        <h3>Room Settings</h3>
+                        <div class="flex gap-2">
+                            <div class="form-group">
+                                <label for="room-width">Width (m)</label>
+                                <input type="number" id="room-width" min="2" max="20" step="0.5" value="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="room-depth">Depth (m)</label>
+                                <input type="number" id="room-depth" min="2" max="20" step="0.5" value="5">
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-2">
+                            <div class="form-group w-full">
+                                <label for="color-floor">Floor Color</label>
+                                <input type="color" id="color-floor" value="#bbbbbb">
+                            </div>
+                            <div class="form-group w-full">
+                                <label for="color-wall">Wall Color</label>
+                                <input type="color" id="color-wall" value="#e0e0e0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Add Furniture</h3>
+                        <div class="furniture-grid">
+                            <div class="furniture-item" data-type="chair" role="button" tabindex="0" aria-label="Add chair">Chair</div>
+                            <div class="furniture-item" data-type="table" role="button" tabindex="0" aria-label="Add table">Table</div>
+                            <div class="furniture-item" data-type="sofa" role="button" tabindex="0" aria-label="Add sofa">Sofa</div>
+                            <div class="furniture-item" data-type="sidetable" role="button" tabindex="0" aria-label="Add side table">Side Table</div>
+                            <div class="furniture-item" data-type="bed" role="button" tabindex="0" aria-label="Add bed">Bed</div>
+                            <div class="furniture-item" data-type="cupboard" role="button" tabindex="0" aria-label="Add cupboard">Cupboard</div>
+                            <div class="furniture-item" data-type="bookshelf" role="button" tabindex="0" aria-label="Add bookshelf">Bookshelf</div>
+                            <div class="furniture-item" data-type="tvstand" role="button" tabindex="0" aria-label="Add TV stand">TV Stand with TV</div>
+                        </div>
+                    </div>
+
+                    <div id="inspector-panel" class="sidebar-section hidden glass-panel"
+                        style="margin: 1rem; padding: 1rem; border: 1px solid var(--accent-color);">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 style="margin: 0; color: var(--accent-color);">Edit Selected</h3>
+                            <button id="btn-delete-item" class="btn btn-danger btn-icon" title="Delete Item">🗑</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="item-scale">Scale: <span id="scale-val">1.0</span></label>
+                            <input type="range" id="item-scale" min="0.5" max="2.0" step="0.1" value="1.0">
+                        </div>
+                        <div class="form-group">
+                            <label for="item-rotation">Rotation: <span id="rot-val">0</span>°</label>
+                            <input type="range" id="item-rotation" min="0" max="360" step="15" value="0">
+                        </div>
+                        <div class="form-group flex items-center justify-between">
+                            <label for="item-color" style="margin: 0;">Color</label>
+                            <input type="color" id="item-color" value="#ffffff" style="width: 50%; height: 30px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section mt-auto"
+                    style="border-top: 1px solid var(--border-color); border-bottom: none;">
+                    <div class="form-group flex items-center justify-between mb-4">
+                        <label for="toggle-shading" style="margin:0;">3D Shading/Shadows</label>
+                        <input type="checkbox" id="toggle-shading" checked style="width:auto; transform: scale(1.5);">
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btn-save" class="btn btn-primary w-full">Save Design</button>
+                        <button id="btn-undo" class="btn btn-secondary" aria-label="Undo last action">Undo</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 2D / 3D Split Area -->
+            <main class="workspace">
+                <!-- Top / Left: 2D Canvas -->
+                <div class="split-pane" style="flex: 1;">
+                    <div class="pane-header">2D Layout (Drag to move)</div>
+                    <div class="canvas-container" id="canvas-2d-container">
+                        <canvas id="canvas-2d"></canvas>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="h-divider"></div>
+
+                <!-- Bottom / Right: 3D View -->
+                <div class="split-pane" style="flex: 1;">
+                    <div class="pane-header">3D Visualization (Drag to rotate • Scroll to zoom)</div>
+                    <div class="canvas-container" id="canvas-3d-container">
+                        <!-- Three.js will inject canvas here -->
+                    </div>
+                </div>
+            </main>
+        </section>
+
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="hidden"
+        style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div class="glass-panel" style="width: 400px; max-width: 90%; position: relative; padding: 2rem;">
+            <button id="btn-close-feedback"
+                style="position: absolute; right: 1rem; top: 1rem; background: transparent; border: none; color: white; cursor: pointer; font-size: 1.2rem;">&times;</button>
+            <h2 class="mb-4">Give Feedback</h2>
+            <form id="feedback-form">
+                <div class="form-group text-left" style="text-align: left;">
+                    <label for="feedback-type">Feedback Type</label>
+                    <select id="feedback-type"
+                        style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.1); color: white; margin-bottom: 1rem;">
+                        <option value="general" style="color: black;">General Feedback</option>
+                    </select>
+                </div>
+                <div class="form-group text-left" style="text-align: left; margin-top: 1rem;">
+                    <label for="feedback-message">Message</label>
+                    <textarea id="feedback-message" required placeholder="Tell us what you think..."
+                        style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.1); color: white; min-height: 100px; resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-full mt-2">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- UI Feedback Toast -->
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true">Notification</div>
+
+    <!-- Scripts -->
+    <!-- Load Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Load OrbitControls from CDN (compatible with r128) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <!-- App Logic -->
+    <script src="js/storage.js"></script>
+    <script src="js/furniture.js"></script>
+    <script src="js/scene3d.js"></script>
+    <script src="js/canvas2d.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
